@@ -56,6 +56,9 @@ def generate_some_text(input_str, text_len=10):
 
         # Write to file
         outFile = open("text_gen_output/" + pt_model + ".txt", "a")
+        outFile.write("\n\n----Prompt---- \n")
+        outFile.write(input_str + "\n")
+        outFile.write("----Generated Text---- \n")
         outFile.writelines(output_text)
         outFile.close()
 
@@ -64,4 +67,4 @@ def generate_some_text(input_str, text_len=10):
 
 # Tests
 # Matrix Description
-generate_some_text("The Matrix is everywhere. It is all around us. Even now, in this very room. You can see it when you look out your window or when you turn on your television. You can feel it when you go to work... when you go to church... when you pay your taxes. It is the world that has been pulled over your eyes to blind you from the truth.")
+generate_some_text("The Matrix is everywhere.")
