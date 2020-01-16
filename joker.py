@@ -1,4 +1,4 @@
-from transformers import AdamW  # WarmupLinearSchedule
+from transformers import AdamW, get_linear_schedule_with_warmup  # WarmupLinearSchedule
 from torch.utils.data import Dataset
 import csv
 import json
@@ -82,8 +82,8 @@ model.train()
 optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
 # scheduler = WarmupLinearSchedule(
 #    optimizer, warmup_steps=WARMUP_STEPS, t_total=-1)
-scheduler = transformers.get_linear_schedule_with_warmup(
-    optimizer, num_warmup_steps=WARMUP_STEPS, TRAINING_STEPS=TRAINING_STEPS,  t_total=-1)
+scheduler = get_linear_schedule_with_warmup(
+    optimizer, num_warmup_steps=WARMUP_STEPS, num_training_steps=TRAINING_STEPS,  last_epoch=-1)
 
 
 proc_seq_count = 0
