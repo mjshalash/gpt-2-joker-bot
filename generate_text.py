@@ -11,7 +11,7 @@ device = 'cpu'
 # if torch.cuda.is_available():
 #     device = 'cuda'
 pt_model = 'gpt2'
-print("Importing" + pt_model)
+print("Importing " + pt_model)
 
 tokenizer = GPT2Tokenizer.from_pretrained(pt_model)
 model = GPT2LMHeadModel.from_pretrained(pt_model)
@@ -32,7 +32,7 @@ def choose_from_top(probs, n=1):
     return int(token_id)
 
 
-def generate_some_text(input_str, text_len=50):
+def generate_some_text(input_str, text_len=10):
     print("Startong Word Generation")
     cur_ids = torch.tensor(tokenizer.encode(input_str)
                            ).unsqueeze(0).long().to(device)
@@ -53,7 +53,13 @@ def generate_some_text(input_str, text_len=50):
 
         output_list = list(cur_ids.squeeze().to('cpu').numpy())
         output_text = tokenizer.decode(output_list)
-        print(output_text)
+
+        # Write to file
+        outFile = open("text_gen_output/" + pt_model + ".txt", "a")
+        outFile.writelines(output_text)
+        outFile.close()
+
+        print("File Successfully Written")
 
 
 # Tests
