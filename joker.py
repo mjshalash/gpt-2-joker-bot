@@ -14,11 +14,11 @@ warnings.filterwarnings('ignore')
 logging.getLogger().setLevel(logging.CRITICAL)
 
 # Hyperparameters
-BATCH_SIZE = 16
-EPOCHS = 5
+BATCH_SIZE = 1
+EPOCHS = 1
 LEARNING_RATE = 3e-5
 WARMUP_STEPS = 5000
-TRAINING_STEPS = 100
+TRAINING_STEPS = 10000
 MAX_SEQ_LEN = 400
 
 device = 'cpu'
@@ -42,7 +42,8 @@ class JokesDataset(Dataset):
     def __init__(self, jokes_dataset_path='data/short_jokes/'):
         super().__init__()
 
-        short_jokes_path = os.path.join(jokes_dataset_path, 'shortjokes.csv')
+        short_jokes_path = os.path.join(
+            jokes_dataset_path, 'shortjokes.csv')
 
         # Concatenate <|endoftext\> to end of jokes
         # Recognized by GPT-2 as end of token marker
@@ -82,6 +83,7 @@ model.train()
 optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
 # scheduler = WarmupLinearSchedule(
 #    optimizer, warmup_steps=WARMUP_STEPS, t_total=-1)
+# TODO: Investigate what this is and proper number for TRAINING_STEPS
 scheduler = get_linear_schedule_with_warmup(
     optimizer, num_warmup_steps=WARMUP_STEPS, num_training_steps=TRAINING_STEPS,  last_epoch=-1)
 
@@ -139,6 +141,7 @@ for epoch in range(EPOCHS):
             optimizer.zero_grad()
             model.zero_grad()
 
+        print(str(batch_count)+"\n")
         if batch_count == 100:
             print(f"sum loss {sum_loss}")
             batch_count = 0
