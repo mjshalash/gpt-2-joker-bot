@@ -14,16 +14,17 @@ warnings.filterwarnings('ignore')
 logging.getLogger().setLevel(logging.CRITICAL)
 
 # Hyperparameters
-BATCH_SIZE = 1
-EPOCHS = 1
+BATCH_SIZE = 16
+EPOCHS = 5
 LEARNING_RATE = 3e-5
 WARMUP_STEPS = 5000
 TRAINING_STEPS = 10000
 MAX_SEQ_LEN = 400
 
 device = 'cpu'
-# if torch.cuda.is_available():
-#     device = 'cuda'
+if torch.cuda.is_available():
+    device = 'cuda'
+    print("GPU detected, utilizing GPU")
 
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
@@ -141,7 +142,6 @@ for epoch in range(EPOCHS):
             optimizer.zero_grad()
             model.zero_grad()
 
-        print(str(batch_count)+"\n")
         if batch_count == 100:
             print(f"sum loss {sum_loss}")
             batch_count = 0
@@ -149,4 +149,4 @@ for epoch in range(EPOCHS):
 
     # Store the model after each epoch to compare the performance of them
     torch.save(model.state_dict(), os.path.join(
-        models_folder, f"gpt2_medium_joker_{epoch}.pt"))
+        models_folder, f"gpt2_joker_{epoch}.pt"))
