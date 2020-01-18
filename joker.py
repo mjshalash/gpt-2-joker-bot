@@ -142,7 +142,6 @@ for epoch in range(EPOCHS):
             optimizer.zero_grad()
             model.zero_grad()
 
-        print(str(batch_count)+"\n")
         if batch_count == 100:
             print(f"sum loss {sum_loss}")
             batch_count = 0
