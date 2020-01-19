@@ -18,7 +18,7 @@ BATCH_SIZE = 16
 EPOCHS = 5
 LEARNING_RATE = 3e-5
 WARMUP_STEPS = 5000
-TRAINING_STEPS = 5000
+TRAINING_STEPS = 10000
 MAX_SEQ_LEN = 400
 
 device = 'cpu'
@@ -35,7 +35,7 @@ class JokesDataset(Dataset):
         super().__init__()
 
         short_jokes_path = os.path.join(
-            jokes_dataset_path, 'shortjokestest.csv')
+            jokes_dataset_path, 'shortjokes.csv')
 
         # Concatenate <|endoftext\> to end of jokes
         # Recognized by GPT-2 as end of token marker
@@ -55,7 +55,7 @@ class JokesDataset(Dataset):
                 # Check for innappropriate words in kaggle dataset
                 for word in words:
                     if word in ('piss', 'pissed', 'slave', 'slaves', 'porn', 'condom', 'sex', 'shit', 'shits', 'retarded', 'vagina', 'cunt', 'penis', 'ass', 'gays', 'gay', 'black', 'sex'):
-                        print(word)
+                        # print(word)
                         innaprop_flag = 1
 
                 # print(innaprop_flag)
