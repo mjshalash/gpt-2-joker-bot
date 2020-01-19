@@ -47,9 +47,11 @@ models_folder = "trained_models"
 model_path = os.path.join(models_folder, f"gpt2_joker_{MODEL_EPOCH}.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'generated_{MODEL_EPOCH}.jokes'
+jokes_output_file_path = f'joke_gen_output/generated_{MODEL_EPOCH}.jokes'
 
 model.eval()
+
+# If generated jokes list already exists, replace it
 if os.path.exists(jokes_output_file_path):
     os.remove(jokes_output_file_path)
 
