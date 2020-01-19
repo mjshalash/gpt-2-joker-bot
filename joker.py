@@ -1,4 +1,4 @@
-from transformers import AdamW  # WarmupLinearSchedule
+from transformers import AdamW, get_linear_schedule_with_warmup  # WarmupLinearSchedule
 from torch.utils.data import Dataset
 import csv
 import json
@@ -18,12 +18,13 @@ BATCH_SIZE = 16
 EPOCHS = 5
 LEARNING_RATE = 3e-5
 WARMUP_STEPS = 5000
-TRAINING_STEPS = 100
+TRAINING_STEPS = 5000
 MAX_SEQ_LEN = 400
 
 device = 'cpu'
-# if torch.cuda.is_available():
-#     device = 'cuda'
+if torch.cuda.is_available():
+    device = 'cuda'
+    print("GPU detected, utilizing GPU")
 
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
@@ -42,7 +43,8 @@ class JokesDataset(Dataset):
     def __init__(self, jokes_dataset_path='data/short_jokes/'):
         super().__init__()
 
-        short_jokes_path = os.path.join(jokes_dataset_path, 'shortjokes.csv')
+        short_jokes_path = os.path.join(
+            jokes_dataset_path, 'shortjokes.csv')
 
         # Concatenate <|endoftext\> to end of jokes
         # Recognized by GPT-2 as end of token marker
@@ -82,8 +84,9 @@ model.train()
 optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
 # scheduler = WarmupLinearSchedule(
 #    optimizer, warmup_steps=WARMUP_STEPS, t_total=-1)
-scheduler = transformers.get_linear_schedule_with_warmup(
-    optimizer, num_warmup_steps=WARMUP_STEPS, TRAINING_STEPS=TRAINING_STEPS,  t_total=-1)
+# TODO: Investigate what this is and proper number for TRAINING_STEPS
+scheduler = get_linear_schedule_with_warmup(
+    optimizer, num_warmup_steps=WARMUP_STEPS, num_training_steps=TRAINING_STEPS,  last_epoch=-1)
 
 
 proc_seq_count = 0
@@ -146,4 +149,4 @@ for epoch in range(EPOCHS):
 
     # Store the model after each epoch to compare the performance of them
     torch.save(model.state_dict(), os.path.join(
-        models_folder, f"gpt2_medium_joker_{epoch}.pt"))
+        models_folder, f"gpt2_joker_{epoch}.pt"))
