@@ -35,7 +35,7 @@ class JokesDataset(Dataset):
         super().__init__()
 
         short_jokes_path = os.path.join(
-            jokes_dataset_path, 'shortjokes.csv')
+            jokes_dataset_path, 'shortjokestest.csv')
 
         # Concatenate <|endoftext\> to end of jokes
         # Recognized by GPT-2 as end of token marker
@@ -48,8 +48,21 @@ class JokesDataset(Dataset):
 
             x = 0
             for row in csv_reader:
-                joke_str = f"JOKE:{row[1]}{self.end_of_text_token}"
-                self.joke_list.append(joke_str)
+                innaprop_flag = 0
+                words = row[1].split(" ")
+
+                ## Parse through each word in row ##
+                # Check for innappropriate words in kaggle dataset
+                for word in words:
+                    if word in ('piss', 'pissed', 'slave', 'slaves', 'porn', 'condom', 'sex', 'shit', 'shits', 'retarded', 'vagina', 'cunt', 'penis', 'ass', 'gays', 'gay', 'black', 'sex'):
+                        print(word)
+                        innaprop_flag = 1
+
+                # print(innaprop_flag)
+                if innaprop_flag == 0:
+                    joke_str = f"JOKE:{row[1]}{self.end_of_text_token}"
+                    self.joke_list.append(joke_str)
+        print(len(self.joke_list))
 
     def __len__(self):
         return len(self.joke_list)
@@ -98,6 +111,7 @@ for epoch in range(EPOCHS):
         #################### "Fit as many joke sequences into MAX_SEQ_LEN sequence as possible" logic start ####
         joke_tens = torch.tensor(tokenizer.encode(
             joke[0])).unsqueeze(0).to(device)
+
         # Skip sample from dataset if it is longer than MAX_SEQ_LEN
         if joke_tens.size()[1] > MAX_SEQ_LEN:
             continue
