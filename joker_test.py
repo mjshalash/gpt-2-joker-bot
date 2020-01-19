@@ -40,7 +40,7 @@ def choose_from_top(probs, n=5):
 
 
 ###### Test Model #######
-MODEL_EPOCH = 4
+MODEL_EPOCH = 3
 
 models_folder = "trained_models"
 

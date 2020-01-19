@@ -1,6 +1,7 @@
 # Custom
 data/
 trained_models/
+saved_models/
 joke_gen_output/
 
 # Initially taken from Github's Python gitignore file
