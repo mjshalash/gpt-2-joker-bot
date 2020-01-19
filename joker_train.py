@@ -30,15 +30,6 @@ tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
 
-def choose_from_top(probs, n=5):
-    ind = np.argpartition(probs, -n)[-n:]
-    top_prob = probs[ind]
-    top_prob = top_prob / np.sum(top_prob)  # Normalize
-    choice = np.random.choice(n, 1, p=top_prob)
-    token_id = ind[choice][0]
-    return int(token_id)
-
-
 class JokesDataset(Dataset):
     def __init__(self, jokes_dataset_path='data/short_jokes/'):
         super().__init__()
@@ -75,7 +66,7 @@ dataset = JokesDataset()
 
 joke_loader = DataLoader(dataset, batch_size=1, shuffle=True)
 
-# Train Model
+#################### Train Model #############################
 # Train the model and save the model weights after each epoch
 # Generate jokes with each version of weight to see what is best
 
