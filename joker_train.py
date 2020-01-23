@@ -26,8 +26,13 @@ if torch.cuda.is_available():
     device = 'cuda'
     print("GPU detected, utilizing GPU")
 
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+
+# Make model name a variable to automate organizing saved models
+# Options: gpt2, gpt2-medium, gpt2-large, gpt2=xl
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+model = GPT2LMHeadModel.from_pretrained('gpt2-medium')
+
+print("Model Imported!")
 
 
 class JokesDataset(Dataset):
@@ -62,7 +67,7 @@ class JokesDataset(Dataset):
                 # if innaprop_flag == 0:
                 joke_str = f"JOKE:{row[1]}{self.end_of_text_token}"
                 self.joke_list.append(joke_str)
-        print(len(self.joke_list))
+        # print(len(self.joke_list))
 
     def __len__(self):
         return len(self.joke_list)
