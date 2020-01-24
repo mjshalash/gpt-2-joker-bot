@@ -30,7 +30,7 @@ tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
 
-def choose_from_top(probs, n=5):
+def choose_from_top(probs, n=1):
     ind = np.argpartition(probs, -n)[-n:]
     top_prob = probs[ind]
     top_prob = top_prob / np.sum(top_prob)  # Normalize

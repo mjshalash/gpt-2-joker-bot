@@ -29,8 +29,8 @@ if torch.cuda.is_available():
 
 # Make model name a variable to automate organizing saved models
 # Options: gpt2, gpt2-medium, gpt2-large, gpt2=xl
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
-model = GPT2LMHeadModel.from_pretrained('gpt2-medium')
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained('gpt2')
 
 print("Model Imported!")
 
