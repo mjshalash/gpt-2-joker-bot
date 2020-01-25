@@ -8,9 +8,9 @@ logging.getLogger().setLevel(logging.CRITICAL)
 device = 'cpu'
 
 
-# if torch.cuda.is_available():
-#     device = 'cuda'
-pt_model = 'gpt2'
+if torch.cuda.is_available():
+    device = 'cuda'
+pt_model = 'malik'
 print("Importing " + pt_model)
 
 tokenizer = GPT2Tokenizer.from_pretrained(pt_model)

@@ -18,7 +18,7 @@ BATCH_SIZE = 16
 EPOCHS = 5
 LEARNING_RATE = 3e-5
 WARMUP_STEPS = 5000
-TRAINING_STEPS = 5000
+TRAINING_STEPS = 10000
 MAX_SEQ_LEN = 400
 
 device = 'cpu'
@@ -26,8 +26,13 @@ if torch.cuda.is_available():
     device = 'cuda'
     print("GPU detected, utilizing GPU")
 
+
+# Make model name a variable to automate organizing saved models
+# Options: gpt2, gpt2-medium, gpt2-large, gpt2=xl
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
+
+print("Model Imported!")
 
 
 class JokesDataset(Dataset):
@@ -50,6 +55,7 @@ class JokesDataset(Dataset):
             for row in csv_reader:
                 joke_str = f"JOKE:{row[1]}{self.end_of_text_token}"
                 self.joke_list.append(joke_str)
+        # print(len(self.joke_list))
 
     def __len__(self):
         return len(self.joke_list)
@@ -98,6 +104,7 @@ for epoch in range(EPOCHS):
         #################### "Fit as many joke sequences into MAX_SEQ_LEN sequence as possible" logic start ####
         joke_tens = torch.tensor(tokenizer.encode(
             joke[0])).unsqueeze(0).to(device)
+
         # Skip sample from dataset if it is longer than MAX_SEQ_LEN
         if joke_tens.size()[1] > MAX_SEQ_LEN:
             continue

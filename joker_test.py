@@ -30,7 +30,7 @@ tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
 
-def choose_from_top(probs, n=5):
+def choose_from_top(probs, n=1):
     ind = np.argpartition(probs, -n)[-n:]
     top_prob = probs[ind]
     top_prob = top_prob / np.sum(top_prob)  # Normalize
@@ -44,10 +44,10 @@ MODEL_EPOCH = 3
 
 models_folder = "trained_models"
 
-model_path = os.path.join(models_folder, f"gpt2_joker_{MODEL_EPOCH}.pt")
+model_path = os.path.join(models_folder, f"011920_E3.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'joke_gen_output/generated_{MODEL_EPOCH}.jokes'
+jokes_output_file_path = f'joke_gen_output/011920_E3.jokes'
 
 model.eval()
 
