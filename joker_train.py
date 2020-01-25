@@ -53,18 +53,6 @@ class JokesDataset(Dataset):
 
             x = 0
             for row in csv_reader:
-                # innaprop_flag = 0
-                # words = row[1].split(" ")
-
-                ## Parse through each word in row ##
-                # Check for innappropriate words in kaggle dataset
-                # for word in words:
-                #   if word in ('piss', 'pissed', 'slave', 'slaves', 'porn', 'condom', 'sex', 'shit', 'shits', 'retarded', 'vagina', 'cunt', 'penis', 'ass', 'gays', 'gay', 'black', 'sex'):
-                #      # print(word)
-                #     innaprop_flag = 1
-
-                # print(innaprop_flag)
-                # if innaprop_flag == 0:
                 joke_str = f"JOKE:{row[1]}{self.end_of_text_token}"
                 self.joke_list.append(joke_str)
         # print(len(self.joke_list))

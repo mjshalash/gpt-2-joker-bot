@@ -42,12 +42,12 @@ def choose_from_top(probs, n=1):
 ###### Test Model #######
 MODEL_EPOCH = 3
 
-models_folder = "saved_models\kaggal_short_jokes"
+models_folder = "trained_models"
 
-model_path = os.path.join(models_folder, f"gpt2_cleanerjoker_{MODEL_EPOCH}.pt")
+model_path = os.path.join(models_folder, f"011920_E3.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'joke_gen_output/generated_cleaner_{MODEL_EPOCH}.jokes'
+jokes_output_file_path = f'joke_gen_output/011920_E3.jokes'
 
 model.eval()
 
