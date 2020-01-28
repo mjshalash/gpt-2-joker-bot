@@ -13,7 +13,7 @@ warnings.filterwarnings('ignore')
 
 logging.getLogger().setLevel(logging.CRITICAL)
 
-# Hyperparameters
+# Hyperparameters for Model Training
 BATCH_SIZE = 16
 EPOCHS = 5
 LEARNING_RATE = 3e-5
@@ -21,22 +21,32 @@ WARMUP_STEPS = 5000
 TRAINING_STEPS = 10000
 MAX_SEQ_LEN = 400
 
+# If CUDA GPU available, use it
 device = 'cpu'
 if torch.cuda.is_available():
     device = 'cuda'
     print("GPU detected, utilizing GPU")
 
 
-# Make model name a variable to automate organizing saved models
-# Options: gpt2, gpt2-medium, gpt2-large, gpt2=xl
+# TODO: Make model name a variable to automate organizing saved models
+# Retrieve language model from huggingface AWS S3 Bucket
+
+# Byte-pair encoder
+# Transforms input text into recognizable input tokens
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+
+# GPT2LMHeadModel is the GPT2Model with an extra linear layer
+# Extra layer does inverse op of embedding layer to create dict. of possible word outcomes
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
 print("Model Imported!")
 
+# Custom dataset class which inherits abstract Dataset (from pytorch)
+
 
 class JokesDataset(Dataset):
     def __init__(self, jokes_dataset_path='data/short_jokes/'):
+        # Find joke dataset
         super().__init__()
 
         short_jokes_path = os.path.join(
@@ -48,6 +58,7 @@ class JokesDataset(Dataset):
         self.joke_list = []
         self.end_of_text_token = "<|endoftext|>"
 
+        # Strip joke from each line of csv
         with open(short_jokes_path) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
 
@@ -57,6 +68,7 @@ class JokesDataset(Dataset):
                 self.joke_list.append(joke_str)
         # print(len(self.joke_list))
 
+    # Overrides of abstract Dataset class
     def __len__(self):
         return len(self.joke_list)
 
@@ -67,21 +79,24 @@ class JokesDataset(Dataset):
 # Create Dataset object
 dataset = JokesDataset()
 
-# Utilize pytorch DataLoader to combine dataset object with different samplers
-# Samplers are different strategies for providing data to models
-
+# DataLoader is a better iterator than simple for-loop
+# Gives access to Batching data, Shuffling data, and use of multiprocessing workers
 joke_loader = DataLoader(dataset, batch_size=1, shuffle=True)
 
 #################### Train Model #############################
 # Train the model and save the model weights after each epoch
 # Generate jokes with each version of weight to see what is best
 
+# Move model to specified device for training
 model = model.to(device)
 model.train()
+
+# Optimizer to determine how, when and by what model parameters are updated
+# Update model params based on loss function results
+
 optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
-# scheduler = WarmupLinearSchedule(
-#    optimizer, warmup_steps=WARMUP_STEPS, t_total=-1)
-# TODO: Investigate what this is and proper number for TRAINING_STEPS
+
+
 scheduler = get_linear_schedule_with_warmup(
     optimizer, num_warmup_steps=WARMUP_STEPS, num_training_steps=TRAINING_STEPS,  last_epoch=-1)
 
