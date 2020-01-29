@@ -93,10 +93,12 @@ model.train()
 
 # Optimizer to determine how, when and by what model parameters are updated
 # Update model params based on loss function results
-
+# Adam = adaptive moment estimation = uses past gradients to calculate current
+# aka momentum
 optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
 
-
+# How the learning rate (magnitude of weight change) adapts over time
+# Linear with warmup = HIGH learning rate at the beginning and then stays constant
 scheduler = get_linear_schedule_with_warmup(
     optimizer, num_warmup_steps=WARMUP_STEPS, num_training_steps=TRAINING_STEPS,  last_epoch=-1)
 
@@ -106,17 +108,25 @@ sum_loss = 0.0
 batch_count = 0
 
 tmp_jokes_tens = None
+
+# Establish folder to save trained models
 models_folder = "trained_models"
 if not os.path.exists(models_folder):
     os.mkdir(models_folder)
 
+# Every Epoch
 for epoch in range(EPOCHS):
 
     print(f"EPOCH {epoch} started" + '=' * 30)
 
+    # Enumerate gives access to counter (idx) and item (joke)
     for idx, joke in enumerate(joke_loader):
 
         #################### "Fit as many joke sequences into MAX_SEQ_LEN sequence as possible" logic start ####
+        # tensor = multidimensional array with variable num. of axis
+        # Vector = 1-order tensor, Matrix = 2 order tensor
+        # Creates tensor with joke data
+        # Tokenizer.encode is encoding joke input
         joke_tens = torch.tensor(tokenizer.encode(
             joke[0])).unsqueeze(0).to(device)
 
@@ -146,15 +156,19 @@ for epoch in range(EPOCHS):
         loss.backward()
         sum_loss = sum_loss + loss.detach().data
 
+        # Increment sequence counter
         proc_seq_count = proc_seq_count + 1
+
+        # If we have completed 1 batch
         if proc_seq_count == BATCH_SIZE:
             proc_seq_count = 0
             batch_count += 1
-            optimizer.step()
-            scheduler.step()
+            optimizer.step()        # This is important detail, we do not take learning step
+            scheduler.step()        # after ALL trainign data, we do it after each batch
             optimizer.zero_grad()
             model.zero_grad()
 
+        # Print output every 100th batch
         if batch_count == 100:
             print(f"sum loss {sum_loss}")
             batch_count = 0
