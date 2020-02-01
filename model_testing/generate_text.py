@@ -32,7 +32,7 @@ def choose_from_top(probs, n=40):
     return int(token_id)
 
 
-def generate_some_text(input_str, text_len=10):
+def generate_some_text(input_str, text_len=500):
     print("Startong Word Generation")
     cur_ids = torch.tensor(tokenizer.encode(input_str)
                            ).unsqueeze(0).long().to(device)
@@ -67,4 +67,4 @@ def generate_some_text(input_str, text_len=10):
 
 # Tests
 # Matrix Description
-generate_some_text("")
+generate_some_text("Whoa! Yeah, Cleveland. What’s up, Cleveland? How you all feeling? Everybody good? Y’all good? Everybody straight? Cold as shit out this bitch, ain’t it? I don’t like that— All this snow. I don’t like that shit. Y’all got that slushy shit, that slipping snow. Hey, look— God damn it. There’s slush. There’s slush right there. Watch the slush. I don’t like that shit. Y’all ain’t supposed to have snow out here. I don’t like that shit. Y’all ain’t supposed to have snow out here. Good year for y’all though. Right now got— Before I even get started, shouts out to— — Hey, sugar foot. How you doing? How you doing, sweetie? Get it out now. Before we get started, shouts out to my man Shaq up front showing love. The cavs. My man LeBron in the house. Shout out to our boy LeBron in the house. It’s a good year for y’all. A good year for y’all. Y’all might do it. Y’all might do it. Y’all might do it. Y’all might do it. All right, y’all got me up here for a while, all right? And this time— About an hour. I’m gonna be up here about an hour. Now in this time y’all gonna hear a lot of stuff. I’m not gonna lie to y’all. Don’t judge me. I don’t want nobody judging me. I love to be honest when I’m on stage.")
