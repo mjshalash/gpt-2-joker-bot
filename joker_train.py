@@ -149,22 +149,28 @@ for epoch in range(EPOCHS):
                 tmp_jokes_tens = torch.cat(
                     [tmp_jokes_tens, joke_tens[:, 1:]], dim=1)
                 continue
+
         ################## Sequence ready, process it trough the model ##################
 
         outputs = model(work_jokes_tens, labels=work_jokes_tens)
         loss, logits = outputs[:2]
+
+        # .backward() is a part of Autograd
+        # Autograd is the automatic differentiation library for pytorch
+        # This performs backpropagation
         loss.backward()
         sum_loss = sum_loss + loss.detach().data
 
         # Increment sequence counter
         proc_seq_count = proc_seq_count + 1
 
-        # If we have completed 1 batch
+        # If we have completed 1 batch (a certain number of sequences)
+        # Please note important step details below
         if proc_seq_count == BATCH_SIZE:
             proc_seq_count = 0
             batch_count += 1
             optimizer.step()        # This is important detail, we do not take learning step
-            scheduler.step()        # after ALL trainign data, we do it after each batch
+            scheduler.step()        # after ALL training data, we do it after each batch
             optimizer.zero_grad()
             model.zero_grad()
 
