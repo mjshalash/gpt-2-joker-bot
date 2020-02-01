@@ -10,7 +10,7 @@ device = 'cpu'
 
 if torch.cuda.is_available():
     device = 'cuda'
-pt_model = 'malik'
+pt_model = 'gpt2'
 print("Importing " + pt_model)
 
 tokenizer = GPT2Tokenizer.from_pretrained(pt_model)
@@ -22,7 +22,7 @@ print(pt_model+"model imported")
 # get random token ID
 
 
-def choose_from_top(probs, n=1):
+def choose_from_top(probs, n=40):
     print("Selecting Word")
     ind = np.argpartition(probs, -n)[-n:]
     top_prob = probs[ind]
@@ -67,4 +67,4 @@ def generate_some_text(input_str, text_len=10):
 
 # Tests
 # Matrix Description
-generate_some_text("The Matrix is everywhere.")
+generate_some_text("")
