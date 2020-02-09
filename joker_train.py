@@ -45,12 +45,12 @@ print("Model Imported!")
 
 
 class JokesDataset(Dataset):
-    def __init__(self, jokes_dataset_path='data/short_jokes/'):
+    def __init__(self, jokes_dataset_path='datasets/lightbulb/'):
         # Find joke dataset
         super().__init__()
 
         short_jokes_path = os.path.join(
-            jokes_dataset_path, 'shortjokes.csv')
+            jokes_dataset_path, 't_lightbulbs_stan.csv')
 
         # Concatenate <|endoftext\> to end of jokes
         # Recognized by GPT-2 as end of token marker
