@@ -42,12 +42,12 @@ def choose_from_top(probs, n=1):
 ###### Test Model #######
 MODEL_EPOCH = 3
 
-models_folder = "trained_models"
+models_folder = "../trained_models"
 
-model_path = os.path.join(models_folder, f"011920_E3.pt")
+model_path = os.path.join(models_folder, f"gpt2_joker_4.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'joke_gen_output/011920_E3.jokes'
+jokes_output_file_path = f'../joke_gen_output/020920Light_E4.jokes'
 
 model.eval()
 
