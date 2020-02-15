@@ -159,6 +159,7 @@ for epoch in range(EPOCHS):
         # Autograd is the automatic differentiation library for pytorch
         # This performs backpropagation
         loss.backward()
+        # detach() detaches tensor from computation history and prevents future computation
         sum_loss = sum_loss + loss.detach().data
 
         # Increment sequence counter

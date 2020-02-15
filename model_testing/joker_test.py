@@ -39,27 +39,40 @@ tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
 # Important function
+# Essentially it determines which word it chooses to output
+# based on probabilities of possible words
+# K parameter determines how many words/probabilities are considered
 
 
-def choose_from_top(probs, n=40):
+def choose_from_top(probs, n=1):
+    # Partitions probability array, -n is axis to sort on
+    # elements < -n left, elements >= -n to right
+    # Then, take only right side of partition
     ind = np.argpartition(probs, -n)[-n:]
+
+    # Normalize probabilities array
     top_prob = probs[ind]
-    top_prob = top_prob / np.sum(top_prob)  # Normalize
+    top_prob = top_prob / np.sum(top_prob)
+
+    # Choosing 1 random sample from prob array
+    # USING given probabilities
     choice = np.random.choice(n, 1, p=top_prob)
     token_id = ind[choice][0]
     return int(token_id)
 
 
 ###### Test Model #######
-MODEL_EPOCH = 3
+MODEL_EPOCH = 4
 
 models_folder = "../trained_models"
 
-model_path = os.path.join(models_folder, f"gpt2_joker_4.pt")
+model_path = os.path.join(models_folder, f"gpt2_joker_{MODEL_EPOCH}.pt")
 model.load_state_dict(torch.load(model_path))
 
 jokes_output_file_path = f'../joke_gen_output/020920Light_E4.jokes'
 
+# Switch model to evalutation mode (self.training set to false)
+# Some models behave differently when training vs testing
 model.eval()
 
 # If generated jokes list already exists, replace it
@@ -67,35 +80,58 @@ if os.path.exists(jokes_output_file_path):
     os.remove(jokes_output_file_path)
 
 joke_num = 0
+
+# Temporarily sets all requires_grad flags to false
+# toch.Tensor has a requires_grad flag. When set to true, it tracks all ops on it
+# When you finish, call backward() and compute gradients (backpropogation)
+# no_grad() prevents tracking history and using memory when evaluating
+# as we do not need to update our gradients
 with torch.no_grad():
 
     for joke_idx in range(1000):
 
         joke_finished = False
 
+        # tensor = multidimensional array with variable num. of axis
+        # Vector = 1-order tensor, Matrix = 2 order tensor, etc.
+        # Creates tensor with joke data
+        # Tokenizer.encode is encoding joke input
+        # Finally, copy tensor to cpu
         cur_ids = torch.tensor(tokenizer.encode("JOKE:")
                                ).unsqueeze(0).to(device)
 
         for i in range(100):
             print(f"{i}\n")
+            # Process tensor through the model
             outputs = model(cur_ids, labels=cur_ids)
             loss, logits = outputs[:2]
-            # Take the first(from only one in this case) batch and the last predicted embedding
+
+            # Take the first batch and the last predicted embedding
+            # Use softmax to turn possible words into corresponding probabilities
             softmax_logits = torch.softmax(logits[0, -1], dim=0)
+
+            # Broaden word choices as we get closer to end of joke
             if i < 3:
-                n = 20
+                n = 20  # Choose from top 20
             else:
-                n = 3
+                n = 3   # Choose from top 3
+
             # Randomly(from the topN probability distribution) select the next word
+            # Pass in probabilities array to chooseFromTop function and select from top n
+            # BASED on probabilities
             next_token_id = choose_from_top(
                 softmax_logits.to('cpu').numpy(), n=n)
-            cur_ids = torch.cat([cur_ids, torch.ones((1, 1)).long().to(
-                device) * next_token_id], dim=1)  # Add the last word to the running sequence
 
+            # Concatenate chosen word_token to running sequence
+            cur_ids = torch.cat([cur_ids, torch.ones((1, 1)).long().to(
+                device) * next_token_id], dim=1)
+
+            # If machine decided to choose <|endoftext|> then we done
             if next_token_id in tokenizer.encode('<|endoftext|>'):
                 joke_finished = True
                 break
 
+        # If the joke is finished, write joke to file
         if joke_finished:
 
             joke_num = joke_num + 1
