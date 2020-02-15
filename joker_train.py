@@ -170,12 +170,13 @@ for epoch in range(EPOCHS):
             proc_seq_count = 0
             batch_count += 1
             optimizer.step()        # This is important detail, we do not take learning step
-            scheduler.step()        # after ALL training data, we do it after each batch
+            scheduler.step()        # after ALL training data, we ONLY do it after each batch
             optimizer.zero_grad()
             model.zero_grad()
 
         # Print output every 100th batch
-        if batch_count == 100:
+        verboseAmt = 5
+        if batch_count == verboseAmt:
             print(f"sum loss {sum_loss}")
             batch_count = 0
             sum_loss = 0.0

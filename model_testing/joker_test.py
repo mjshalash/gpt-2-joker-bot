@@ -26,11 +26,22 @@ device = 'cpu'
 #     device = 'cuda'
 #     print("GPU detected, utilizing GPU")
 
+
+# TODO: Make model name a variable to automate organizing saved models
+# Retrieve language model from huggingface AWS S3 Bucket
+
+# Byte-pair encoder
+# Transforms input text into recognizable input tokens
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+
+# GPT2LMHeadModel is the GPT2Model with an extra linear layer
+# Extra layer does inverse op of embedding layer to create dict. of possible word outcomes
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
+# Important function
 
-def choose_from_top(probs, n=1):
+
+def choose_from_top(probs, n=40):
     ind = np.argpartition(probs, -n)[-n:]
     top_prob = probs[ind]
     top_prob = top_prob / np.sum(top_prob)  # Normalize
@@ -66,6 +77,7 @@ with torch.no_grad():
                                ).unsqueeze(0).to(device)
 
         for i in range(100):
+            print(f"{i}\n")
             outputs = model(cur_ids, labels=cur_ids)
             loss, logits = outputs[:2]
             # Take the first(from only one in this case) batch and the last predicted embedding
