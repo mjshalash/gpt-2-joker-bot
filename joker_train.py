@@ -31,6 +31,10 @@ if torch.cuda.is_available():
 # TODO: Make model name a variable to automate organizing saved models
 # Retrieve language model from huggingface AWS S3 Bucket
 
+
+# gpt options = openai-gpt
+# gpt-2 options = gpt2, gpt2-medium, gpt2-large, gpt2-xl
+
 # Byte-pair encoder
 # Transforms input text into recognizable input tokens
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
