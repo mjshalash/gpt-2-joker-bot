@@ -3,6 +3,7 @@ trained_models/
 saved_models/
 trained_models/
 joke_gen_output/
+datasets/
 
 # Initially taken from Github's Python gitignore file
 

@@ -33,7 +33,7 @@ def choose_from_top(probs, n=40):
 
 
 def generate_some_text(input_str, text_len=500):
-    print("Startong Word Generation")
+    print("Starting Word Generation")
     cur_ids = torch.tensor(tokenizer.encode(input_str)
                            ).unsqueeze(0).long().to(device)
 

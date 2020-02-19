@@ -45,12 +45,12 @@ print("Model Imported!")
 
 
 class JokesDataset(Dataset):
-    def __init__(self, jokes_dataset_path='data/short_jokes/'):
+    def __init__(self, jokes_dataset_path='datasets/lightbulb/'):
         # Find joke dataset
         super().__init__()
 
         short_jokes_path = os.path.join(
-            jokes_dataset_path, 'shortjokes.csv')
+            jokes_dataset_path, 't_lightbulbs_stan.csv')
 
         # Concatenate <|endoftext\> to end of jokes
         # Recognized by GPT-2 as end of token marker
@@ -159,6 +159,7 @@ for epoch in range(EPOCHS):
         # Autograd is the automatic differentiation library for pytorch
         # This performs backpropagation
         loss.backward()
+        # detach() detaches tensor from computation history and prevents future computation
         sum_loss = sum_loss + loss.detach().data
 
         # Increment sequence counter
@@ -170,12 +171,13 @@ for epoch in range(EPOCHS):
             proc_seq_count = 0
             batch_count += 1
             optimizer.step()        # This is important detail, we do not take learning step
-            scheduler.step()        # after ALL training data, we do it after each batch
+            scheduler.step()        # after ALL training data, we ONLY do it after each batch
             optimizer.zero_grad()
             model.zero_grad()
 
         # Print output every 100th batch
-        if batch_count == 100:
+        verboseAmt = 5
+        if batch_count == verboseAmt:
             print(f"sum loss {sum_loss}")
             batch_count = 0
             sum_loss = 0.0
