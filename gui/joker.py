@@ -19,6 +19,10 @@ class Window(Frame):
         Frame.__init__(self, master)
         self.master = master
 
+        # Layout
+        Frame1 = Frame(master, bg="black", bd=10)
+        Frame1.grid(row=0, column=0, rowspan=30, columnspan=2, sticky=W+E+N+S)
+
         # Variables
         self.pretrainedModel = ''
         self.device = ''
@@ -131,7 +135,7 @@ class Window(Frame):
 
 def main():
     root = tk.Tk()
-    root.geometry("1000x500")
+    root.geometry("1000x700")
     Window(root)
     root.wm_title("GPT-2 Joker")
     root.mainloop()
