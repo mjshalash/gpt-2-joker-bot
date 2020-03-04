@@ -1,3 +1,6 @@
+# Python program to standardize a dataset to fit model training
+# May need to be modified depending on input
+
 import csv
 
 is_first = True
