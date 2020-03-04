@@ -5,7 +5,7 @@ import pandas
 from word_filter import bad_terms
 
 # Read csv into DataFrame
-result = pandas.read_csv('../datasets/short_jokes/shortjokes.csv')
+result = pandas.read_csv('../datasets/short_jokes/shortjokestest.csv')
 
 print(result.shape)
 
@@ -21,10 +21,12 @@ for row in result.itertuples():
 
     # Check each word for curse word
     for word in joke.split(" "):
-        # print(word)
+        # Strip word for profanity
+        target = word.rstrip('s')
+
         # If bad word (singular or plural) detected, exit loop and do not add joke to new document
         # TODO: .lower() could be used somehow to reduce variations of words needed in list
-        if word in bad_terms or word+'s':
+        if target in bad_terms:
             bad_flag = 1
             break
 
@@ -35,10 +37,12 @@ for row in result.itertuples():
     else:
         result.at[index, 'Bad'] = 'N'
 
+# print(result)
+
 
 # Drop any rows which do not meet no-bad condition
 result.drop(result[result['Bad'] != 'N'].index, inplace=True)
 
 print(result.shape)
 # Save remaining jokes to new file
-result.to_csv('datasets/short_jokes/sanitized/shortjokesclean.csv')
+result.to_csv('../datasets/short_jokes/sanitized/shortjokesclean.csv')
