@@ -1,11 +1,11 @@
 import pandas
 
-# Establish list of innappropriate terms
-bad_terms = ['marijuana', 'semen', 'strippers', 'circumcision', 'srascist', 'piss', 'pissed', 'slave', 'slaves', 'porn', 'condom', 'sex', 'shit', 'shits',
-             'retarded', 'vagina', 'cunt', 'penis', 'ass', 'gays', 'gay', 'black', 'sex']
+# Retrieve words to filter on
+# (This file is in the gitignore by default)
+from word_filter import bad_terms
 
 # Read csv into DataFrame
-result = pandas.read_csv('data/short_jokes/shortjokes.csv')
+result = pandas.read_csv('../datasets/short_jokes/shortjokes.csv')
 
 print(result.shape)
 
@@ -22,9 +22,9 @@ for row in result.itertuples():
     # Check each word for curse word
     for word in joke.split(" "):
         # print(word)
-        # If bad word detected, exit loop and do not add joke to new document
+        # If bad word (singular or plural) detected, exit loop and do not add joke to new document
         # TODO: .lower() could be used somehow to reduce variations of words needed in list
-        if word in bad_terms:
+        if word in bad_terms or word+'s':
             bad_flag = 1
             break
 
@@ -41,4 +41,4 @@ result.drop(result[result['Bad'] != 'N'].index, inplace=True)
 
 print(result.shape)
 # Save remaining jokes to new file
-result.to_csv('data/short_jokes_clean/shortjokesclean.csv')
+result.to_csv('datasets/short_jokes/sanitized/shortjokesclean.csv')

@@ -5,6 +5,9 @@ trained_models/
 joke_gen_output/
 datasets/
 
+# File which lists words to filter on
+word_filter.py
+
 # Initially taken from Github's Python gitignore file
 
 # Byte-compiled / optimized / DLL files
