@@ -2,6 +2,7 @@ from transformers import AdamW, get_linear_schedule_with_warmup  # WarmupLinearS
 from torch.utils.data import Dataset
 import csv
 import json
+import time
 import os
 from torch.utils.data import Dataset, DataLoader
 import logging
@@ -118,9 +119,11 @@ models_folder = "trained_models"
 if not os.path.exists(models_folder):
     os.mkdir(models_folder)
 
+# Begin entire train timer
+startProg = time.perf_counter()
+
 # Every Epoch
 for epoch in range(EPOCHS):
-
     print(f"EPOCH {epoch} started" + '=' * 30)
 
     # Enumerate gives access to counter (idx) and item (joke)
@@ -189,3 +192,8 @@ for epoch in range(EPOCHS):
     # Store the model after each epoch to compare the performance of them
     torch.save(model.state_dict(), os.path.join(
         models_folder, f"gpt2_joker_{epoch}.pt"))
+
+# End train timer and calculate duration
+endProg = time.perf_counter()
+
+print(f"Total Duration: {endProg - startProg} seconds")
