@@ -49,12 +49,12 @@ print("Model Imported!")
 
 
 class JokesDataset(Dataset):
-    def __init__(self, jokes_dataset_path='datasets/lightbulb/'):
+    def __init__(self, jokes_dataset_path='datasets/short_jokes/sanitized/'):
         # Find joke dataset
         super().__init__()
 
         short_jokes_path = os.path.join(
-            jokes_dataset_path, 't_lightbulbs_stan.csv')
+            jokes_dataset_path, 'shortjokesclean.csv')
 
         # Concatenate <|endoftext\> to end of jokes
         # Recognized by GPT-2 as end of token marker
@@ -179,8 +179,8 @@ for epoch in range(EPOCHS):
             optimizer.zero_grad()
             model.zero_grad()
 
-        # Print output every 100th batch
-        verboseAmt = 5
+        # Print output every nth batch
+        verboseAmt = 100
         if batch_count == verboseAmt:
             print(f"sum loss {sum_loss}")
             batch_count = 0
