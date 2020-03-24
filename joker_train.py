@@ -16,10 +16,10 @@ logging.getLogger().setLevel(logging.CRITICAL)
 
 # Hyperparameters for Model Training
 BATCH_SIZE = 16
-EPOCHS = 3
+EPOCHS = 2
 LEARNING_RATE = 3e-5
 WARMUP_STEPS = 5000
-TRAINING_STEPS = 5000
+TRAINING_STEPS = 20000
 MAX_SEQ_LEN = 400
 
 # If CUDA GPU available, use it
@@ -185,7 +185,7 @@ for epoch in range(EPOCHS):
         # Print output every nth batch
         verboseAmt = 100
         if batch_count == verboseAmt:
-            print(f"sum loss {sum_loss}")
+            print(f"{sum_loss}")
             batch_count = 0
             sum_loss = 0.0
 
