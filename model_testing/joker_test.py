@@ -64,12 +64,12 @@ def choose_from_top(probs, n=1):
 ###### Test Model #######
 MODEL_EPOCH = 4
 
-models_folder = "../trained_models"
+models_folder = "./shortjokesclean/VarEpoch/1E/"
 
-model_path = os.path.join(models_folder, f"gpt2_joker_{MODEL_EPOCH}.pt")
+model_path = os.path.join(models_folder, f"Trial1.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'../joke_gen_output/020920Light_E4.jokes'
+jokes_output_file_path = f'../joke_gen_output/sample.jokes'
 
 # Switch model to evalutation mode (self.training set to false)
 # Some models behave differently when training vs testing
@@ -100,7 +100,8 @@ with torch.no_grad():
         cur_ids = torch.tensor(tokenizer.encode("JOKE:")
                                ).unsqueeze(0).to(device)
 
-        for i in range(100):
+        # Output 10 jokes
+        for i in range(10):
             print(f"{i}\n")
             # Process tensor through the model
             outputs = model(cur_ids, labels=cur_ids)
@@ -111,10 +112,13 @@ with torch.no_grad():
             softmax_logits = torch.softmax(logits[0, -1], dim=0)
 
             # Broaden word choices as we get closer to end of joke
-            if i < 3:
-                n = 20  # Choose from top 20
-            else:
-                n = 3   # Choose from top 3
+            # if i < 3:
+            #    n = 20  # Choose from top 20
+            # else:
+            #    n = 3   # Choose from top 3
+
+            # Choose from top 40
+            n = 40
 
             # Randomly(from the topN probability distribution) select the next word
             # Pass in probabilities array to chooseFromTop function and select from top n
