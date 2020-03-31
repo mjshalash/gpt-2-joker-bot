@@ -44,7 +44,7 @@ model = GPT2LMHeadModel.from_pretrained('gpt2')
 # K parameter determines how many words/probabilities are considered
 
 
-def choose_from_top(probs, n=1):
+def choose_from_top(probs, n):
     # Partitions probability array, -n is axis to sort on
     # elements < -n left, elements >= -n to right
     # Then, take only right side of partition
@@ -62,14 +62,12 @@ def choose_from_top(probs, n=1):
 
 
 ###### Test Model #######
-MODEL_EPOCH = 4
+models_folder = "shortjokesclean/TM/VarEpoch/2E/"
 
-models_folder = "./shortjokesclean/VarEpoch/1E/"
-
-model_path = os.path.join(models_folder, f"Trial1.pt")
+model_path = os.path.join(models_folder, f"Trial1_2.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'../joke_gen_output/sample.jokes'
+jokes_output_file_path = f'output/sample.jokes'
 
 # Switch model to evalutation mode (self.training set to false)
 # Some models behave differently when training vs testing
@@ -88,7 +86,8 @@ joke_num = 0
 # as we do not need to update our gradients
 with torch.no_grad():
 
-    for joke_idx in range(1000):
+    # Output 10 Jokes
+    for joke_idx in range(10):
 
         joke_finished = False
 
@@ -100,9 +99,8 @@ with torch.no_grad():
         cur_ids = torch.tensor(tokenizer.encode("JOKE:")
                                ).unsqueeze(0).to(device)
 
-        # Output 10 jokes
-        for i in range(10):
-            print(f"{i}\n")
+        for i in range(100):
+            # print(f"{i}\n")
             # Process tensor through the model
             outputs = model(cur_ids, labels=cur_ids)
             loss, logits = outputs[:2]
@@ -111,14 +109,8 @@ with torch.no_grad():
             # Use softmax to turn possible words into corresponding probabilities
             softmax_logits = torch.softmax(logits[0, -1], dim=0)
 
-            # Broaden word choices as we get closer to end of joke
-            # if i < 3:
-            #    n = 20  # Choose from top 20
-            # else:
-            #    n = 3   # Choose from top 3
-
-            # Choose from top 40
-            n = 40
+            # Choose from top n
+            n = 100
 
             # Randomly(from the topN probability distribution) select the next word
             # Pass in probabilities array to chooseFromTop function and select from top n
@@ -144,4 +136,4 @@ with torch.no_grad():
             output_text = tokenizer.decode(output_list)
 
             with open(jokes_output_file_path, 'a') as f:
-                f.write(f"{output_text} \n\n")
+                f.write(f"{joke_num} {output_text} \n\n")
