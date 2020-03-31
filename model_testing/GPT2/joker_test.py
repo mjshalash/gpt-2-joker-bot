@@ -41,7 +41,7 @@ model = GPT2LMHeadModel.from_pretrained('gpt2')
 # Important function
 # Essentially it determines which word it chooses to output
 # based on probabilities of possible words
-# K parameter determines how many words/probabilities are considered
+# n parameter determines how many words/probabilities are considered
 
 
 def choose_from_top(probs, n):
@@ -62,9 +62,9 @@ def choose_from_top(probs, n):
 
 
 ###### Test Model #######
-models_folder = "shortjokesclean/TM/VarEpoch/2E/"
+models_folder = "shortjokesclean/TM/VarEpoch/3E/"
 
-model_path = os.path.join(models_folder, f"Trial1_2.pt")
+model_path = os.path.join(models_folder, f"Trial1_3.pt")
 model.load_state_dict(torch.load(model_path))
 
 jokes_output_file_path = f'output/sample.jokes'
@@ -77,7 +77,13 @@ model.eval()
 if os.path.exists(jokes_output_file_path):
     os.remove(jokes_output_file_path)
 
+# Output joke number
 joke_num = 0
+
+# Preset n-values to test with
+n_param_values = [40, 20, 10, 100]
+n = n_param_values[0]
+
 
 # Temporarily sets all requires_grad flags to false
 # toch.Tensor has a requires_grad flag. When set to true, it tracks all ops on it
@@ -87,7 +93,7 @@ joke_num = 0
 with torch.no_grad():
 
     # Output 10 Jokes
-    for joke_idx in range(10):
+    for joke_idx in range(40):
 
         joke_finished = False
 
@@ -109,9 +115,6 @@ with torch.no_grad():
             # Use softmax to turn possible words into corresponding probabilities
             softmax_logits = torch.softmax(logits[0, -1], dim=0)
 
-            # Choose from top n
-            n = 100
-
             # Randomly(from the topN probability distribution) select the next word
             # Pass in probabilities array to chooseFromTop function and select from top n
             # BASED on probabilities
@@ -131,6 +134,16 @@ with torch.no_grad():
         if joke_finished:
 
             joke_num = joke_num + 1
+
+            # Determine new n-value
+            if(joke_num <= 10):
+                n = n_param_values[0]
+            elif (joke_num <= 20):
+                n = n_param_values[1]
+            elif(joke_num <= 30):
+                n = n_param_values[2]
+            else:
+                n = n_param_values[3]
 
             output_list = list(cur_ids.squeeze().to('cpu').numpy())
             output_text = tokenizer.decode(output_list)
