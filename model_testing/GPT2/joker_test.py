@@ -1,3 +1,4 @@
+import sys
 from transformers import AdamW, get_linear_schedule_with_warmup  # WarmupLinearSchedule
 from torch.utils.data import Dataset
 import csv
@@ -61,13 +62,13 @@ def choose_from_top(probs, n):
     return int(token_id)
 
 
-###### Test Model #######
+###### Model Selection #######
 models_folder = "shortjokesclean/TM/VarEpoch/3E/"
 
 model_path = os.path.join(models_folder, f"Trial1_3.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'output/sample.jokes'
+jokes_output_file_path = f'shortjokesclean/output/sample.jokes'
 
 # Switch model to evalutation mode (self.training set to false)
 # Some models behave differently when training vs testing
@@ -80,9 +81,10 @@ if os.path.exists(jokes_output_file_path):
 # Output joke number
 joke_num = 0
 
-# Preset n-values to test with
-n_param_values = [40, 20, 10, 100]
-n = n_param_values[0]
+
+# Parse Passed In Parameters
+# N is first parameter for calling this program
+n = int(sys.argv[1])
 
 
 # Temporarily sets all requires_grad flags to false
@@ -134,16 +136,6 @@ with torch.no_grad():
         if joke_finished:
 
             joke_num = joke_num + 1
-
-            # Determine new n-value
-            if(joke_num <= 10):
-                n = n_param_values[0]
-            elif (joke_num <= 20):
-                n = n_param_values[1]
-            elif(joke_num <= 30):
-                n = n_param_values[2]
-            else:
-                n = n_param_values[3]
 
             output_list = list(cur_ids.squeeze().to('cpu').numpy())
             output_text = tokenizer.decode(output_list)
