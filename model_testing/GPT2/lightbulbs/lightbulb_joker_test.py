@@ -95,7 +95,7 @@ n = int(sys.argv[1])
 with torch.no_grad():
 
     # Output 40 Jokes
-    for joke_idx in range(10):
+    for joke_idx in range(40):
 
         joke_finished = False
 
