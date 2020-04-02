@@ -7,6 +7,7 @@ datasets/
 
 # Trained Models
 model_testing/GPT2/shortjokesclean/TM
+model_testing/GPT2/lightbulbs/TM
 
 # File which lists words to filter on
 word_filter.py
