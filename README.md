@@ -1,4 +1,4 @@
-Warning: Much of the data and content found in this project is innappropriate and insensitive. This is due to limitations in data acquisition and by no means reflects my, Malik Shalash's views or opinions. It is included for means of ethical AI research
+**Warning: Much of the data and content found in this project is innappropriate and insensitive. This is due to limitations in data acquisition and by no means reflects my, Malik Shalash's views or opinions. It is included for means of ethical AI research
 
 GPT-2 Modification for humourous joke generation
 
