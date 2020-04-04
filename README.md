@@ -1,3 +1,5 @@
+**Warning: Much of the data and content found in this project is innappropriate and insensitive. This is due to limitations in data acquisition and by no means reflects my, Malik Shalash's views or opinions**
+
 GPT-2 Modification for humourous joke generation
 
 - Warning, as of right now the only dataset I have been able to acquire has been from kaggle.
