@@ -1,4 +1,4 @@
-from transformers import AdamW, get_linear_schedule_with_warmup  # WarmupLinearSchedule
+from transformers import AdamW, get_linear_schedule_with_warmup, get_cosine_with_hard_restarts_schedule_with_warmup
 from torch.utils.data import Dataset
 import csv
 import json
@@ -17,9 +17,9 @@ logging.getLogger().setLevel(logging.CRITICAL)
 # Hyperparameters for Model Training
 BATCH_SIZE = 16
 EPOCHS = 2
-LEARNING_RATE = 3e-5
+LEARNING_RATE = 0.01
 WARMUP_STEPS = 5000
-TRAINING_STEPS = 40000
+TRAINING_STEPS = 5000
 MAX_SEQ_LEN = 400
 
 # If CUDA GPU available, use it
@@ -106,6 +106,10 @@ optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
 # Linear with warmup = HIGH learning rate at the beginning and then stays constant
 scheduler = get_linear_schedule_with_warmup(
     optimizer, num_warmup_steps=WARMUP_STEPS, num_training_steps=TRAINING_STEPS,  last_epoch=-1)
+
+# TODO: Implement different scheduler
+# scheduler2 = get_cosine_with_hard_restarts_schedule_with_warmup(
+#    optimizer, num_warmup_steps=WARMUP_STEPS, num_training_steps=TRAINING_STEPS, last_epoch=-1)
 
 
 proc_seq_count = 0
