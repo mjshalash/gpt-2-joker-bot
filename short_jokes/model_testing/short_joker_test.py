@@ -63,12 +63,12 @@ def choose_from_top(probs, n):
 
 
 ###### Model Selection #######
-models_folder = "shortjokesclean/TM/VarEpoch/3E/"
+models_folder = "TM/VarLR/1e-02/"
 
-model_path = os.path.join(models_folder, f"Trial1_3.pt")
+model_path = os.path.join(models_folder, f"Trial1_E2.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'shortjokesclean/output/sample.jokes'
+jokes_output_file_path = f'output/sample.jokes'
 
 # Switch model to evalutation mode (self.training set to false)
 # Some models behave differently when training vs testing
@@ -95,7 +95,7 @@ n = int(sys.argv[1])
 with torch.no_grad():
 
     # Output 10 Jokes
-    for joke_idx in range(40):
+    for joke_idx in range(10):
 
         joke_finished = False
 

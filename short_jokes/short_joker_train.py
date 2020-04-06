@@ -17,7 +17,7 @@ logging.getLogger().setLevel(logging.CRITICAL)
 # Hyperparameters for Model Training
 BATCH_SIZE = 16
 EPOCHS = 2
-LEARNING_RATE = 0.01
+LEARNING_RATE = 0.1
 WARMUP_STEPS = 5000
 TRAINING_STEPS = 5000
 MAX_SEQ_LEN = 400
