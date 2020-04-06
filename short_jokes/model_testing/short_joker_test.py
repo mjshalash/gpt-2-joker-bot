@@ -14,6 +14,7 @@ warnings.filterwarnings('ignore')
 
 logging.getLogger().setLevel(logging.CRITICAL)
 
+# TODO: Remove uneccessary variables
 # Hyperparameters
 BATCH_SIZE = 16
 EPOCHS = 5
