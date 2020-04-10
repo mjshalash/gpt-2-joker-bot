@@ -64,9 +64,9 @@ def choose_from_top(probs, n):
 
 
 ###### Model Selection #######
-models_folder = "TM/VarLR/1e-02/"
+models_folder = "TM/VarTS/40K/"
 
-model_path = os.path.join(models_folder, f"Trial1_E2.pt")
+model_path = os.path.join(models_folder, f"Trial2_2.pt")
 model.load_state_dict(torch.load(model_path))
 
 jokes_output_file_path = f'output/sample.jokes'
