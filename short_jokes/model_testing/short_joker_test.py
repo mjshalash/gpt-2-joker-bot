@@ -82,14 +82,13 @@ if os.path.exists(jokes_output_file_path):
 # Output joke number
 joke_num = 0
 
-
 # Parse Passed In Parameters
 # N is first parameter for calling this program
 n = int(sys.argv[1])
 
 
 # Temporarily sets all requires_grad flags to false
-# toch.Tensor has a requires_grad flag. When set to true, it tracks all ops on it
+# torch.Tensor has a requires_grad flag. When set to true, it tracks all ops on it
 # When you finish, call backward() and compute gradients (backpropogation)
 # no_grad() prevents tracking history and using memory when evaluating
 # as we do not need to update our gradients
