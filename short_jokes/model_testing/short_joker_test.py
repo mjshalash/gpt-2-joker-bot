@@ -14,6 +14,7 @@ warnings.filterwarnings('ignore')
 
 logging.getLogger().setLevel(logging.CRITICAL)
 
+# TODO: Remove uneccessary variables
 # Hyperparameters
 BATCH_SIZE = 16
 EPOCHS = 5
@@ -63,12 +64,12 @@ def choose_from_top(probs, n):
 
 
 ###### Model Selection #######
-models_folder = "shortjokesclean/TM/VarEpoch/3E/"
+models_folder = "TM/VarTS/40K/"
 
-model_path = os.path.join(models_folder, f"Trial1_3.pt")
+model_path = os.path.join(models_folder, f"Trial2_2.pt")
 model.load_state_dict(torch.load(model_path))
 
-jokes_output_file_path = f'shortjokesclean/output/sample.jokes'
+jokes_output_file_path = f'output/sample.jokes'
 
 # Switch model to evalutation mode (self.training set to false)
 # Some models behave differently when training vs testing
@@ -81,21 +82,20 @@ if os.path.exists(jokes_output_file_path):
 # Output joke number
 joke_num = 0
 
-
 # Parse Passed In Parameters
 # N is first parameter for calling this program
 n = int(sys.argv[1])
 
 
 # Temporarily sets all requires_grad flags to false
-# toch.Tensor has a requires_grad flag. When set to true, it tracks all ops on it
+# torch.Tensor has a requires_grad flag. When set to true, it tracks all ops on it
 # When you finish, call backward() and compute gradients (backpropogation)
 # no_grad() prevents tracking history and using memory when evaluating
 # as we do not need to update our gradients
 with torch.no_grad():
 
     # Output 10 Jokes
-    for joke_idx in range(40):
+    for joke_idx in range(10):
 
         joke_finished = False
 
